@@ -1,0 +1,21 @@
+<div class="p-3 bg-light rounded border mb-4">
+    <h4 class="fw-bold mb-3">Popular Tags</h4>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'questions:tag' tag_name='python' %}" class="tag-item">python</a>
+        <a href="{% url 'questions:tag' tag_name='django' %}" class="tag-item">django</a>
+        <a href="{% url 'questions:tag' tag_name='web' %}" class="tag-item">web</a>
+        <a href="{% url 'questions:tag' tag_name='hot' %}" class="tag-item">hot</a>
+        <a href="{% url 'questions:tag' tag_name='sql' %}" class="tag-item">sql</a>
+        <a href="{% url 'questions:tag' tag_name='linux' %}" class="tag-item">linux</a>
+    </div>
+</div>
+<div class="p-3 bg-light rounded border">
+    <h4 class="fw-bold mb-3">Best Members</h4>
+    <ul class="list-unstyled mb-0">
+        <li class="mb-2"><a href="#" class="text-decoration-none">Mr. Freeman</a></li>
+        <li class="mb-2"><a href="#" class="text-decoration-none">Dr. House</a></li>
+        <li class="mb-2"><a href="#" class="text-decoration-none">Bender</a></li>
+        <li class="mb-2"><a href="#" class="text-decoration-none">Queen Victoria</a></li>
+        <li><a href="#" class="text-decoration-none">V. Pupkin</a></li>
+    </ul>
+</div>

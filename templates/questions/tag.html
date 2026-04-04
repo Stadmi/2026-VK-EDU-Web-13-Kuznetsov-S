@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Questions tagged {{ tag_name }} — AskPupkin{% endblock %}
+{% block content %}
+<div class="d-flex align-items-baseline gap-3 mb-4">
+    <h2 class="fw-bold">Questions tagged «{{ tag_name }}»</h2>
+    <a href="{% url 'questions:index' %}" class="hot-link fw-bold text-decoration-none pb-1">New Questions</a>
+</div>
+{% include 'includes/question_list.html' %}
+{% include 'includes/pagination.html' %}
+{% endblock %}

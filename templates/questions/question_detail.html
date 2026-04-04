@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}{{ question.title }} — AskPupkin{% endblock %}
+{% block content %}
+<article class="question-card p-4 mb-4 border rounded shadow-sm">
+    <h2 class="fw-bold mb-3">{{ question.title }}</h2>
+    <p class="text-dark mb-3">{{ question.text }}</p>
+    <div class="d-flex flex-wrap gap-2 small mb-3">
+        <span class="text-muted">Author: {{ question.author }}</span>
+        <span class="text-muted">Votes: {{ question.votes }}</span>
+        <span class="text-muted">Answers: {{ question.answers_count }}</span>
+    </div>
+    <div class="mb-3">
+        <span class="text-muted">Tags:</span>
+        {% for tag in question.tags %}
+            <a href="{% url 'questions:tag' tag %}" class="tag-item">{{ tag }}</a>
+        {% endfor %}
+    </div>
+</article>
+<section id="answers">
+    <h3 class="fw-bold mb-4">Answers</h3>
+    {% for answer in answers %}
+    <article class="p-3 mb-3 border rounded bg-white shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <strong>{{ answer.author }}</strong>
+            <span class="text-muted">Votes: {{ answer.votes }}</span>
+        </div>
+        <p>{{ answer.text }}</p>
+    </article>
+    {% empty %}
+        <p class="text-muted">Пока нет ответов.</p>
+    {% endfor %}
+</section>
+{% endblock %}

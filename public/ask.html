@@ -1,0 +1,170 @@
+
+
+<!DOCTYPE html>
+<html lang="ru" class="h-100">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AskPupkin — Техно-вопросы и ответы</title>
+        <link rel="icon" href="static/img/favicon.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/css/style.css">
+    </head>
+    <body class="d-flex flex-column h-100">
+
+        <header class="p-3 mb-3 border-bottom bg-white sticky-top">
+            <div class="container">
+                <div
+                    class="d-flex flex-wrap align-items-center justify-content-between">
+
+                    <a href="index.html"
+                        class="text-dark text-decoration-none fw-bold fs-4">
+                        AskPupkin
+                    </a>
+
+                    <div
+                        class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center mx-4"
+                        style="max-width: 600px;">
+                        <form class="w-100" role="search">
+                            <input type="search"
+                                class="form-control rounded-pill"
+                                placeholder="Search questions..."
+                                aria-label="Search">
+                        </form>
+                        <a href="ask.html"
+                            class="btn btn-success fw-bold px-4 rounded-pill shadow-sm">ASK</a>
+                    </div>
+
+                    <div class="user-profile d-flex align-items-center gap-3">
+                        <div
+                            class="user-profile d-flex align-items-center gap-3">
+                            <div
+                                class="user-info d-flex flex-column align-items-end">
+                                <span class="fw-bold small mb-2"
+                                    style="color: #343a40;">Megan Fox</span>
+                                <div class="user-btn-group d-flex gap-1">
+                                    <a href="settings.html"
+                                        class="btn-profile-tag">settings</a>
+                                    <a href="login.html"
+                                        class="btn-profile-tag logout">log
+                                        out</a>
+                                </div>
+                            </div>
+                            <img src="static/img/megan.jpg" alt="Profile"
+                                width="60" height="60"
+                                class="rounded border shadow-sm">
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+
+        <main class="flex-shrink-0">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-9 col-md-8 col-12">
+                        <div id="content_block">
+                            <h2 class="fw-bold mb-4 border-bottom pb-2">New
+                                Question</h2>
+
+                            <form action="#" class="needs-validation">
+                                <div class="mb-4">
+                                    <label for="title"
+                                        class="form-label fw-bold">Title</label>
+                                    <input type="text"
+                                        class="form-control border-dark"
+                                        id="title"
+                                        placeholder="Enter question title"
+                                        required>
+                                    <div class="form-text">Short and clear title
+                                        (max 150 symbols).</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="text"
+                                        class="form-label fw-bold">Text</label>
+                                    <textarea class="form-control border-dark"
+                                        id="text" rows="6"
+                                        placeholder="Describe your problem in detail..."
+                                        required></textarea>
+                                    <div class="form-text">Try to be as specific
+                                        as possible.</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="tags"
+                                        class="form-label fw-bold">Tags</label>
+                                    <input type="text"
+                                        class="form-control border-dark"
+                                        id="tags"
+                                        placeholder="tag1, tag2, tag3">
+                                    <div class="form-text">Separated by commas.
+                                        Example: python, django, web</div>
+                                </div>
+
+                                <button type="submit"
+                                    class="btn btn-success btn-lg px-5 border-dark fw-bold">Ask</button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <aside class="col-lg-3 col-md-4 col-12 mt-4 mt-md-0">
+                        <div class="p-3 bg-light rounded border mb-4">
+                            <h4 class="fw-bold mb-3">Popular Tags</h4>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="#" class="badge border"
+                                    style="color: #212529; background: white; text-decoration: none">perl</a>
+                                <a href="#" class="badge border"
+                                    style="color: #ff922b; background: white; text-decoration: none">python</a>
+                                <a href="#" class="badge border"
+                                    style="color: #51cf66; background: white; text-decoration: none">TechnoPark</a>
+                                <a href="#" class="badge border"
+                                    style="color: #ff6b6b; background: white; text-decoration: none">MySQL</a>
+                                <a href="#" class="badge border"
+                                    style="color: #51cf66; background: white; text-decoration: none">django</a>
+                                <a href="#" class="badge border"
+                                    style="color: #339af0; background: white; text-decoration: none">Mail.Ru</a>
+                                <a href="#" class="badge border"
+                                    style="color: #339af0; background: white; text-decoration: none">Voloshin</a>
+                                <a href="#" class="badge border"
+                                    style="color: #ff922b; background: white; text-decoration: none">Firefox</a>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-light rounded border">
+                            <h4 class="fw-bold mb-3">Best Members</h4>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none">Mr.
+                                        Freeman</a></li>
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none">Dr.
+                                        House</a></li>
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none">Bender</a></li>
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none">Queen
+                                        Victoria</a></li>
+                                <li><a href="#" class="text-decoration-none">V.
+                                        Pupkin</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer mt-auto py-3 bg-light border-top">
+            <div class="container text-center">
+                <span class="text-muted small">© 2026 AskPupkin.</span>
+            </div>
+        </footer>
+
+        <script src="static/js/bootstrap.bundle.min.js"></script>
+        <script src="static/js/main.js"></script>
+    </body>
+</html>

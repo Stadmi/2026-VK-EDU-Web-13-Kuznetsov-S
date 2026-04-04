@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AskPupkin — Главная</title>
+        <link rel="icon" href="static/img/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/css/style.css">
+    </head>
+    <body class="d-flex flex-column h-100">
+
+        <header class="p-3 mb-3 border-bottom bg-white sticky-top">
+            <div class="container">
+                <div
+                    class="d-flex flex-wrap align-items-center justify-content-between">
+
+                    <a href="index.html"
+                        class="text-dark text-decoration-none fw-bold fs-4">
+                        AskPupkin
+                    </a>
+
+                    <div
+                        class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center mx-4"
+                        style="max-width: 600px;">
+                        <form class="w-100" role="search">
+                            <input type="search"
+                                class="form-control rounded-pill"
+                                placeholder="Search questions..."
+                                aria-label="Search">
+                        </form>
+                        <a href="ask.html"
+                            class="btn btn-success fw-bold px-4 rounded-pill shadow-sm">ASK</a>
+                    </div>
+
+                    <div class="user-profile d-flex align-items-center gap-3">
+                        <div
+                            class="user-profile d-flex align-items-center gap-3">
+                            <div
+                                class="user-info d-flex flex-column align-items-end">
+                                <span class="fw-bold small mb-2"
+                                    style="color: #343a40;">Megan Fox</span>
+                                <div class="user-btn-group d-flex gap-1">
+                                    <a href="settings.html"
+                                        class="btn-profile-tag">settings</a>
+                                    <a href="login.html"
+                                        class="btn-profile-tag logout">log
+                                        out</a>
+                                </div>
+                            </div>
+                            <img src="static/img/megan.jpg" alt="Profile"
+                                width="60" height="60"
+                                class="rounded border shadow-sm">
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+
+        <main class="flex-shrink-0">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-9 col-md-8 col-12">
+
+                        <div class="d-flex align-items-baseline gap-3 mb-4">
+                            <h2 class="fw-bold">New Questions</h2>
+                            <a href="hot.html"
+                                class="hot-link fw-bold text-decoration-none pb-1">Hot
+                                Questions</a>
+                        </div>
+
+                        <article
+                            class="question-card d-flex gap-3 mb-4 p-3 border border-dark rounded shadow-sm">
+                            <div class="d-flex flex-column align-items-center"
+                                style="width: 80px;">
+                                <img
+                                    src="/public/static/img/мужик.jpg"
+                                    alt="Avatar"
+                                    class="img-thumbnail border-dark mb-2"
+                                    style="width: 64px; height: 64px; object-fit: cover;">
+
+                                <div
+                                    class="vote-widget d-flex flex-column align-items-center">
+                                    <button class="vote-btn up"
+                                        aria-label="Upvote">▲</button>
+                                    <span class="vote-count fw-bold">5</span>
+                                    <button class="vote-btn down"
+                                        aria-label="Downvote">▼</button>
+                                </div>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <h4 class="mb-1">
+                                    <a href="question.html"
+                                        class="text-decoration-none fw-bold text-primary">How
+                                        to build a moon park?</a>
+                                </h4>
+                                <p class="mb-2 text-dark">
+                                    Guys, I have trouble with a moon park. Can't
+                                    find the black-jack and other important
+                                    stuff for my theme park...
+                                </p>
+
+                                <div
+                                    class="d-flex flex-wrap align-items-center gap-3 mt-3 small">
+                                    <a href="question.html#answers"
+                                        class="btn btn-sm btn-outline-dark py-0">answers
+                                        (3)</a>
+                                    <div class="tags">
+                                        <span class="text-muted">Tags:</span>
+                                        <a href="tag.html"
+                                            class="text-decoration-none ms-1 text-primary">black-jack</a>
+                                        <a href="tag.html"
+                                            class="text-decoration-none ms-1 text-primary">bender</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article
+                            class="question-card d-flex gap-3 mb-4 p-3 border border-dark rounded shadow-sm">
+                            <div class="d-flex flex-column align-items-center"
+                                style="width: 80px;">
+                                <img
+                                    src="/public/static/img/Арсен Маркарян.jpg"
+                                    alt="Avatar"
+                                    class="img-thumbnail border-dark mb-2"
+                                    style="width: 64px; height: 64px; object-fit: cover;">
+
+                                <div
+                                    class="vote-widget d-flex flex-column align-items-center">
+                                    <button class="vote-btn up"
+                                        aria-label="Upvote">▲</button>
+                                    <span class="vote-count fw-bold">5</span>
+                                    <button class="vote-btn down"
+                                        aria-label="Downvote">▼</button>
+                                </div>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <h4 class="mb-1">
+                                    <a href="question.html"
+                                        class="text-decoration-none fw-bold text-primary">How
+                                        to build a moon park?</a>
+                                </h4>
+                                <p class="mb-2 text-dark">
+                                    Guys, I have trouble with a moon park. Can't
+                                    find the black-jack and other important
+                                    stuff for my theme park...
+                                </p>
+
+                                <div
+                                    class="d-flex flex-wrap align-items-center gap-3 mt-3 small">
+                                    <a href="question.html#answers"
+                                        class="btn btn-sm btn-outline-dark py-0">answers
+                                        (3)</a>
+                                    <div class="tags">
+                                        <span class="text-muted">Tags:</span>
+                                        <a href="tag.html"
+                                            class="text-decoration-none ms-1 text-primary">black-jack</a>
+                                        <a href="tag.html"
+                                            class="text-decoration-none ms-1 text-primary">bender</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article
+                            class="question-card d-flex gap-3 mb-4 p-3 border border-dark rounded shadow-sm">
+                            <div class="d-flex flex-column align-items-center"
+                                style="width: 80px;">
+                                <img
+                                    src="/public/static/img/тинькоф.jpg"
+                                    alt="Avatar"
+                                    class="img-thumbnail border-dark mb-2"
+                                    style="width: 64px; height: 64px; object-fit: cover;">
+
+                                <div
+                                    class="vote-widget d-flex flex-column align-items-center">
+                                    <button class="vote-btn up"
+                                        aria-label="Upvote">▲</button>
+                                    <span class="vote-count fw-bold">5</span>
+                                    <button class="vote-btn down"
+                                        aria-label="Downvote">▼</button>
+                                </div>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <h4 class="mb-1">
+                                    <a href="question.html"
+                                        class="text-decoration-none fw-bold text-primary">How
+                                        to build a moon park?</a>
+                                </h4>
+                                <p class="mb-2 text-dark">
+                                    Guys, I have trouble with a moon park. Can't
+                                    find the black-jack and other important
+                                    stuff for my theme park...
+                                </p>
+
+                                <div
+                                    class="d-flex flex-wrap align-items-center gap-3 mt-3 small">
+                                    <a href="question.html#answers"
+                                        class="btn btn-sm btn-outline-dark py-0">answers
+                                        (3)</a>
+                                    <div class="tags">
+                                        <span class="text-muted">Tags:</span>
+                                        <a href="tag.html"
+                                            class="text-decoration-none ms-1 text-primary">black-jack</a>
+                                        <a href="tag.html"
+                                            class="text-decoration-none ms-1 text-primary">bender</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <nav aria-label="Page navigation" class="mt-5 mb-5">
+                            <ul class="pagination">
+                                <li class="page-item active"><a
+                                        class="page-link border-dark bg-dark text-white"
+                                        href="#">1</a></li>
+                                <li class="page-item"><a
+                                        class="page-link text-dark border-dark"
+                                        href="#">2</a></li>
+                                <li class="page-item"><a
+                                        class="page-link text-dark border-dark"
+                                        href="#">3</a></li>
+                                <li class="page-item disabled"><span
+                                        class="page-link border-dark">...</span></li>
+                                <li class="page-item"><a
+                                        class="page-link text-dark border-dark"
+                                        href="#">53</a></li>
+                            </ul>
+                        </nav>
+
+                    </div>
+
+                    <aside class="col-lg-3 col-md-4 col-12">
+                        <div
+                            class="p-3 bg-light border border-dark rounded mb-4">
+                            <h4 class="fw-bold mb-3">Popular Tags</h4>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="#" class="badge border"
+                                    style="color: #212529; background: white; text-decoration: none">perl</a>
+                                <a href="#" class="badge border"
+                                    style="color: #ff922b; background: white; text-decoration: none">python</a>
+                                <a href="#" class="badge border"
+                                    style="color: #51cf66; background: white; text-decoration: none">TechnoPark</a>
+                                <a href="#" class="badge border"
+                                    style="color: #ff6b6b; background: white; text-decoration: none">MySQL</a>
+                                <a href="#" class="badge border"
+                                    style="color: #51cf66; background: white; text-decoration: none">django</a>
+                                <a href="#" class="badge border"
+                                    style="color: #339af0; background: white; text-decoration: none">Mail.Ru</a>
+                                <a href="#" class="badge border"
+                                    style="color: #339af0; background: white; text-decoration: none">Voloshin</a>
+                                <a href="#" class="badge border"
+                                    style="color: #ff922b; background: white; text-decoration: none">Firefox</a>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-light border border-dark rounded">
+                            <h4 class="fw-bold mb-3">Best Members</h4>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none text-primary">Mr.
+                                        Freeman</a></li>
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none text-primary">Dr.
+                                        House</a></li>
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none text-primary">Bender</a></li>
+                                <li class="mb-2"><a href="#"
+                                        class="text-decoration-none text-primary">Queen
+                                        Victoria</a></li>
+                                <li><a href="#"
+                                        class="text-decoration-none text-primary">V.
+                                        Pupkin</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer mt-auto py-3 bg-light border-top border-dark">
+            <div class="container text-center">
+                <span class="text-muted small">© 2026 AskPupkin.</span>
+            </div>
+        </footer>
+
+        <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/main.js"></script>
+    </body>
+</html>

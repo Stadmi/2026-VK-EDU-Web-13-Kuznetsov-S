@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Profile — AskPupkin{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold">Profile</h2>
+    <p class="text-muted">Редактирование данных пользователя.</p>
+</div>
+<form class="p-4 border rounded bg-white shadow-sm" method="post">
+    <div class="mb-3">
+        <label class="form-label" for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" value="{{ profile.username }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ profile.email }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="first_name">First name</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ profile.first_name }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="last_name">Last name</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ profile.last_name }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="about">About</label>
+        <textarea class="form-control" id="about" name="about" rows="4">{{ profile.about }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save changes</button>
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}New Questions — AskPupkin{% endblock %}
+{% block content %}
+<div class="d-flex align-items-baseline gap-3 mb-4">
+    <h2 class="fw-bold">New Questions</h2>
+    <a href="{% url 'questions:hot' %}" class="hot-link fw-bold text-decoration-none pb-1">Hot Questions</a>
+</div>
+{% include 'includes/question_list.html' %}
+{% include 'includes/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Sign up — AskPupkin{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold">Sign up</h2>
+    <p class="text-muted">Create a new AskPupkin account.</p>
+</div>
+<form class="p-4 border rounded bg-white shadow-sm" method="post">
+    <div class="mb-3">
+        <label class="form-label" for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-success">Create account</button>
+</form>
+{% endblock %}
