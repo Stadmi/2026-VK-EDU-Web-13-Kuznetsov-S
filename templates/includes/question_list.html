@@ -1,30 +1,30 @@
-{% load static %}
 {% for question in page_obj %}
-<article class="question-card d-flex gap-3 mb-4 p-3 border rounded shadow-sm">
+<article class="question-card d-flex gap-3 mb-4 p-3 border border-dark rounded shadow-sm">
     <div class="d-flex flex-column align-items-center" style="width: 80px;">
-        <img src="{% static 'img/megan.jpg' %}" alt="Avatar" class="img-thumbnail mb-2" style="width: 64px; height: 64px; object-fit: cover;">
-        <div class="vote-widget d-flex flex-column align-items-center">
-            <button class="vote-btn up" aria-label="Upvote">▲</button>
-            <span class="vote-count fw-bold">{{ question.votes }}</span>
-            <button class="vote-btn down" aria-label="Downvote">▼</button>
-        </div>
+        {% if question.author.profile.avatar %}
+            <img src="{{ question.author.profile.avatar.url }}" alt="Avatar" class="img-thumbnail border-dark mb-2" style="width:64px; height:64px; object-fit:cover;">
+        {% else %}
+            <div class="img-thumbnail border-dark mb-2 d-flex align-items-center justify-content-center bg-secondary text-white" style="width:64px; height:64px; font-size:1.5rem;">
+                {{ question.author.username|first|upper }}
+            </div>
+        {% endif %}
+        <span class="small text-muted">{{ question.rating }}</span>
     </div>
     <div class="flex-grow-1">
-        <h4 class="mb-1">
-            <a href="{% url 'questions:question_detail' question.id %}" class="text-decoration-none fw-bold text-primary">{{ question.title }}</a>
-        </h4>
-        <p class="mb-2 text-dark">{{ question.text }}</p>
-        <div class="d-flex flex-wrap align-items-center gap-3 mt-3 small">
-            <a href="{% url 'questions:question_detail' question.id %}#answers" class="btn btn-sm btn-outline-dark py-0">answers ({{ question.answers_count }})</a>
-            <div class="tags">
-                <span class="text-muted">Tags:</span>
-                {% for tag in question.tags %}
-                    <a href="{% url 'questions:tag' tag %}" class="text-decoration-none ms-1 text-primary">{{ tag }}</a>
-                {% endfor %}
-            </div>
+        <a href="{{ question.get_absolute_url }}" class="text-decoration-none text-dark">
+            <h5 class="fw-bold mb-1">{{ question.title }}</h5>
+        </a>
+        <p class="text-muted small mb-2">{{ question.text|truncatechars:150 }}</p>
+        <div class="d-flex flex-wrap gap-1 mb-2">
+            {% for tag in question.tags.all %}
+                <a href="{% url 'questions:tag' tag.name %}" class="tag-item">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+        <div class="text-muted small">
+            Автор: {{ question.author.username }} &bull;
+            Ответов: {{ question.answers_count }} &bull;
+            {{ question.created_at|date:"d.m.Y H:i" }}
         </div>
     </div>
 </article>
-{% empty %}
-<p class="text-muted">Нет вопросов для отображения.</p>
 {% endfor %}
