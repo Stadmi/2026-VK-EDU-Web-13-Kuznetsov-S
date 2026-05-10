@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\" -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(head -100)",
+      "Bash(python manage.py makemigrations --check)",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\"; $env:DJANGO_DEBUG = \"True\"; & \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Scripts\\\\python.exe\" manage.py makemigrations 2>&1)",
+      "PowerShell(cmd /c dir \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Lib\\\\site-packages\\\\\" 2>&1)",
+      "PowerShell($env:PYTHONPATH = \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Lib\\\\site-packages\"; Set-Location \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\"; & \"C:\\\\Users\\\\kuzst\\\\AppData\\\\Local\\\\Python\\\\bin\\\\python.exe\" -c \"import django; print\\(django.__version__\\)\" 2>&1)",
+      "PowerShell($env:PYTHONPATH = \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Lib\\\\site-packages\"; Set-Location \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\"; & \"C:\\\\Users\\\\kuzst\\\\AppData\\\\Local\\\\Python\\\\bin\\\\python.exe\" manage.py makemigrations 2>&1)",
+      "PowerShell($env:PYTHONPATH = \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Lib\\\\site-packages\"; & \"C:\\\\Users\\\\kuzst\\\\AppData\\\\Local\\\\Python\\\\bin\\\\pip.exe\" install django-debug-toolbar==6.3.0 Pillow==12.2.0 psycopg2-binary==2.9.12 Faker==40.15.0 --target \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Lib\\\\site-packages\" 2>&1 | Select-Object -Last 10)",
+      "PowerShell(& \"C:\\\\Users\\\\kuzst\\\\AppData\\\\Local\\\\Python\\\\bin\\\\python.exe\" -m pip install django-debug-toolbar==6.3.0 Pillow==12.2.0 psycopg2-binary==2.9.12 Faker==40.15.0 --target \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Lib\\\\site-packages\" 2>&1)",
+      "PowerShell($env:PYTHONPATH = \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\\\\venv\\\\Lib\\\\site-packages\"; Set-Location \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\"; & \"C:\\\\Users\\\\kuzst\\\\AppData\\\\Local\\\\Python\\\\bin\\\\python.exe\" manage.py check 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\PostgreSQL\\\\17\\\\bin\\\\psql.exe\" -U postgres -c \"\\\\l\" 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -c \"\\\\l\" 2>&1)",
+      "PowerShell($env:PGPASSWORD = \"postgres\"; & \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -c \"\\\\l\" 2>&1)",
+      "PowerShell(\\(Get-Content \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\data\\\\pg_hba.conf\"\\) -replace 'host    all             all             127.0.0.1/32            scram-sha-256', 'host    all             all             127.0.0.1/32            trust' -replace 'host    all             all             ::1/128                 scram-sha-256', 'host    all             all             ::1/128                 trust' | Set-Content \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\data\\\\pg_hba.conf\" 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\pg_ctl.exe\" reload -D \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\data\" 2>&1)",
+      "PowerShell(net stop \"postgresql-x64-18\" 2>&1)",
+      "PowerShell(net start \"postgresql-x64-18\" 2>&1)",
+      "PowerShell(\\(Get-Content \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\data\\\\pg_hba.conf\"\\) -replace 'host    all             all             127.0.0.1/32            trust', 'host    all             all             127.0.0.1/32            scram-sha-256' -replace 'host    all             all             ::1/128                 trust', 'host    all             all             ::1/128                 scram-sha-256' | Set-Content \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\data\\\\pg_hba.conf\" 2>&1)",
+      "PowerShell(foreach \\($pwd in @\\(\"postgres\", \"1234\", \"12345\", \"password\", \"admin\", \"root\", \"qwerty\", \"\"\\)\\) { $env:PGPASSWORD = $pwd; $result = & \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -h 127.0.0.1 -c \"SELECT 1\" 2>&1; if \\($LASTEXITCODE -eq 0\\) { Write-Host \"Password found: '$pwd'\"; break } })",
+      "PowerShell(foreach \\($pwd in @\\(\"postgres\", \"1234\", \"12345\", \"password\", \"admin\", \"root\", \"qwerty\"\\)\\) { $env:PGPASSWORD = $pwd; $result = & \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -h 127.0.0.1 -c \"SELECT 1\" 2>&1; if \\($LASTEXITCODE -eq 0\\) { Write-Host \"Password: '$pwd'\"; break } else { Write-Host \"Wrong: '$pwd'\" } })",
+      "PowerShell(Get-Content \"$env:APPDATA\\\\postgresql\\\\pgpass.conf\" -ErrorAction SilentlyContinue; Get-Content \"$env:HOMEDRIVE$env:HOMEPATH\\\\.pgpass\" -ErrorAction SilentlyContinue)",
+      "PowerShell($env:PGPASSWORD = \"petrusha2552\"; & \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -h 127.0.0.1 -c \"SELECT version\\(\\)\" 2>&1)",
+      "PowerShell($env:PGPASSWORD = \"petrusha2552\"; & \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -h 127.0.0.1 -c \"SELECT datname FROM pg_database WHERE datname = 'askme'\" 2>&1)",
+      "PowerShell($env:PGPASSWORD = \"petrusha2552\"; & \"C:\\\\Program Files\\\\PostgreSQL\\\\18\\\\bin\\\\psql.exe\" -U postgres -h 127.0.0.1 -c \"CREATE DATABASE askme\" 2>&1)",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\"; $env:DB_PASSWORD = \"petrusha2552\"; & \".\\\\venv\\\\Scripts\\\\python.exe\" manage.py migrate 2>&1)",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\kuzst\\\\2026-VK-EDU-Web-13-Kuznetsov-S\"; $env:DB_PASSWORD = \"petrusha2552\"; $input = \"admin`nAdmin@1234`nAdmin@1234\"; echo $input | & \".\\\\venv\\\\Scripts\\\\python.exe\" manage.py createsuperuser --username admin --email admin@example.com 2>&1)"
+    ]
+  }
+}

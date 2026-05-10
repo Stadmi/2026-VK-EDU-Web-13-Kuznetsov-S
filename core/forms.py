@@ -1,9 +1,14 @@
+import os
+
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.http import url_has_allowed_host_and_scheme
+
+_ALLOWED_AVATAR_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+_MAX_AVATAR_SIZE = 2 * 1024 * 1024  # 2 MB
 
 from .models import Profile
 
@@ -117,6 +122,16 @@ class ProfileForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'username'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'email'}),
         }
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+        if avatar and hasattr(avatar, 'name'):
+            ext = os.path.splitext(avatar.name)[1].lower()
+            if ext not in _ALLOWED_AVATAR_EXTENSIONS:
+                raise ValidationError('Допустимые форматы: JPG, PNG, GIF, WEBP.')
+            if avatar.size > _MAX_AVATAR_SIZE:
+                raise ValidationError('Размер файла не должен превышать 2 МБ.')
+        return avatar
 
     def save(self, commit=True):
         user = super().save(commit=False)

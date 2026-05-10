@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from .models import Answer, Question, Tag
 
@@ -63,3 +64,18 @@ class AnswerForm(forms.ModelForm):
         if commit:
             answer.save()
         return answer
+
+
+class VoteForm(forms.Form):
+    id = forms.IntegerField()
+    value = forms.IntegerField()
+
+    def clean_value(self):
+        value = self.cleaned_data.get('value')
+        if value not in (1, -1):
+            raise ValidationError('Допустимые значения: 1 (лайк) или -1 (дизлайк).')
+        return value
+
+
+class MarkCorrectForm(forms.Form):
+    answer_id = forms.IntegerField()

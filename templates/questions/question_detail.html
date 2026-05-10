@@ -1,21 +1,43 @@
 {% extends 'base.html' %}
+{% load question_extras %}
 {% block title %}{{ question.title }} — AskPupkin{% endblock %}
 {% block content %}
 
 <article class="question-card p-4 mb-4 border rounded shadow-sm">
-    <h2 class="fw-bold mb-3">{{ question.title }}</h2>
-    <p class="text-dark mb-3">{{ question.text }}</p>
+    <div class="d-flex gap-4 align-items-start">
 
-    <div class="d-flex flex-wrap gap-3 small mb-3">
-        <span class="text-muted">Автор: <strong>{{ question.author.username }}</strong></span>
-        <span class="text-muted">Рейтинг: <strong>{{ question.rating }}</strong></span>
-        <span class="text-muted">Ответов: <strong>{{ question.answers_count }}</strong></span>
-    </div>
+        <div class="vote-widget d-flex flex-column align-items-center"
+             data-type="question"
+             data-id="{{ question.id }}"
+             data-user-vote="{{ user_question_vote }}">
+            <button class="vote-btn up {% if user_question_vote == 1 %}active{% endif %}"
+                    {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
+                    aria-label="Лайк">
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+            </button>
+            <span class="vote-count fw-bold fs-5">{{ question.rating }}</span>
+            <button class="vote-btn down {% if user_question_vote == -1 %}active{% endif %}"
+                    {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
+                    aria-label="Дизлайк">
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+            </button>
+        </div>
 
-    <div>
-        {% for tag in question.tags.all %}
-            <a href="{% url 'questions:tag' tag.name %}" class="tag-item">{{ tag.name }}</a>
-        {% endfor %}
+        <div class="flex-grow-1">
+            <h2 class="fw-bold mb-3">{{ question.title }}</h2>
+            <p class="text-dark mb-3">{{ question.text }}</p>
+
+            <div class="d-flex flex-wrap gap-3 small mb-3">
+                <span class="text-muted">Автор: <strong>{{ question.author.username }}</strong></span>
+                <span class="text-muted">Ответов: <strong>{{ question.answers_count }}</strong></span>
+            </div>
+
+            <div>
+                {% for tag in question.tags.all %}
+                    <a href="{% url 'questions:tag' tag.name %}" class="tag-item">{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </article>
 
@@ -24,17 +46,43 @@
 
     {% if page_obj.object_list %}
         {% for answer in page_obj %}
-            <article id="answer-{{ answer.id }}" class="p-3 mb-3 border rounded shadow-sm {% if answer.is_correct %}border-success bg-light{% endif %}">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong>{{ answer.author.username }}</strong>
-                    <div class="d-flex align-items-center gap-2">
-                        {% if answer.is_correct %}
-                            <span class="badge bg-success">✓ Правильный ответ</span>
-                        {% endif %}
-                        <span class="text-muted small">Рейтинг: {{ answer.rating }}</span>
+            <article id="answer-{{ answer.id }}"
+                     class="answer-card p-3 mb-3 border rounded shadow-sm {% if answer.is_correct %}correct border-success{% endif %}">
+                <div class="d-flex gap-3 align-items-start">
+
+                    <div class="vote-widget d-flex flex-column align-items-center"
+                         data-type="answer"
+                         data-id="{{ answer.id }}"
+                         data-user-vote="{{ user_answer_votes|get_item:answer.id }}">
+                        <button class="vote-btn up {% if user_answer_votes|get_item:answer.id == 1 %}active{% endif %}"
+                                {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
+                                aria-label="Лайк">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                        </button>
+                        <span class="vote-count fw-bold">{{ answer.rating }}</span>
+                        <button class="vote-btn down {% if user_answer_votes|get_item:answer.id == -1 %}active{% endif %}"
+                                {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
+                                aria-label="Дизлайк">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>{{ answer.author.username }}</strong>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="correct-badge badge bg-success {% if not answer.is_correct %}d-none{% endif %}">✓ Правильный ответ</span>
+                                {% if user == question.author %}
+                                    <button class="btn btn-sm mark-correct-btn {% if answer.is_correct %}btn-success{% else %}btn-outline-success{% endif %}"
+                                            data-answer-id="{{ answer.id }}">
+                                        {% if answer.is_correct %}✓ Правильный{% else %}Отметить верным{% endif %}
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p class="mb-0">{{ answer.text }}</p>
                     </div>
                 </div>
-                <p class="mb-0">{{ answer.text }}</p>
             </article>
         {% endfor %}
         {% include 'includes/pagination.html' %}

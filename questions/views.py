@@ -1,9 +1,13 @@
+import json
+
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import AnswerForm, QuestionForm
-from .models import Question
+from .forms import AnswerForm, MarkCorrectForm, QuestionForm, VoteForm
+from .models import Answer, AnswerLike, Question, QuestionLike
 from .utils import paginate
 
 ANSWERS_PER_PAGE = 10
@@ -59,6 +63,17 @@ def question_detail(request, question_id):
             return redirect(f"{question.get_absolute_url()}?page={page}#answer-{answer.pk}")
 
     page_obj = paginate(answers_qs, request, per_page=ANSWERS_PER_PAGE)
+
+    user_question_vote = 0
+    user_answer_votes = {}
+    if request.user.is_authenticated:
+        qlike = QuestionLike.objects.filter(question=question, user=request.user).first()
+        user_question_vote = qlike.value if qlike else 0
+
+        answer_ids = [a.id for a in page_obj.object_list]
+        alikes = AnswerLike.objects.filter(answer_id__in=answer_ids, user=request.user)
+        user_answer_votes = {al.answer_id: al.value for al in alikes}
+
     return render(
         request,
         'questions/question_detail.html',
@@ -66,6 +81,8 @@ def question_detail(request, question_id):
             'question': question,
             'page_obj': page_obj,
             'answer_form': answer_form,
+            'user_question_vote': user_question_vote,
+            'user_answer_votes': user_answer_votes,
         },
     )
 
@@ -81,3 +98,143 @@ def ask(request):
         form = QuestionForm()
 
     return render(request, 'questions/ask.html', {'form': form})
+
+
+def _parse_json_body(request):
+    try:
+        return json.loads(request.body), None
+    except (json.JSONDecodeError, ValueError):
+        return None, JsonResponse({'error': 'Неверный формат JSON.'}, status=400)
+
+
+def vote_question(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {'error': 'Требуется авторизация.', 'redirect': reverse('core:login')},
+            status=403,
+        )
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Метод не поддерживается.'}, status=405)
+
+    data, err = _parse_json_body(request)
+    if err:
+        return err
+
+    form = VoteForm(data)
+    if not form.is_valid():
+        return JsonResponse({'error': form.errors}, status=400)
+
+    question_id = form.cleaned_data['id']
+    value = form.cleaned_data['value']
+
+    try:
+        with transaction.atomic():
+            question = Question.objects.select_for_update().get(pk=question_id)
+            existing = QuestionLike.objects.filter(user=request.user, question=question).first()
+
+            if existing:
+                if existing.value == value:
+                    question.rating -= existing.value
+                    question.save(update_fields=['rating'])
+                    existing.delete()
+                    user_vote = 0
+                else:
+                    question.rating += value - existing.value
+                    question.save(update_fields=['rating'])
+                    existing.value = value
+                    existing.save(update_fields=['value'])
+                    user_vote = value
+            else:
+                QuestionLike.objects.create(user=request.user, question=question, value=value)
+                question.rating += value
+                question.save(update_fields=['rating'])
+                user_vote = value
+    except Question.DoesNotExist:
+        return JsonResponse({'error': 'Вопрос не найден.'}, status=404)
+
+    return JsonResponse({'rating': question.rating, 'user_vote': user_vote})
+
+
+def vote_answer(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {'error': 'Требуется авторизация.', 'redirect': reverse('core:login')},
+            status=403,
+        )
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Метод не поддерживается.'}, status=405)
+
+    data, err = _parse_json_body(request)
+    if err:
+        return err
+
+    form = VoteForm(data)
+    if not form.is_valid():
+        return JsonResponse({'error': form.errors}, status=400)
+
+    answer_id = form.cleaned_data['id']
+    value = form.cleaned_data['value']
+
+    try:
+        with transaction.atomic():
+            answer = Answer.objects.select_for_update().get(pk=answer_id)
+            existing = AnswerLike.objects.filter(user=request.user, answer=answer).first()
+
+            if existing:
+                if existing.value == value:
+                    answer.rating -= existing.value
+                    answer.save(update_fields=['rating'])
+                    existing.delete()
+                    user_vote = 0
+                else:
+                    answer.rating += value - existing.value
+                    answer.save(update_fields=['rating'])
+                    existing.value = value
+                    existing.save(update_fields=['value'])
+                    user_vote = value
+            else:
+                AnswerLike.objects.create(user=request.user, answer=answer, value=value)
+                answer.rating += value
+                answer.save(update_fields=['rating'])
+                user_vote = value
+    except Answer.DoesNotExist:
+        return JsonResponse({'error': 'Ответ не найден.'}, status=404)
+
+    return JsonResponse({'rating': answer.rating, 'user_vote': user_vote})
+
+
+def mark_correct(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {'error': 'Требуется авторизация.', 'redirect': reverse('core:login')},
+            status=403,
+        )
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Метод не поддерживается.'}, status=405)
+
+    data, err = _parse_json_body(request)
+    if err:
+        return err
+
+    form = MarkCorrectForm(data)
+    if not form.is_valid():
+        return JsonResponse({'error': form.errors}, status=400)
+
+    answer_id = form.cleaned_data['answer_id']
+
+    try:
+        answer = Answer.objects.select_related('question__author').get(pk=answer_id)
+    except Answer.DoesNotExist:
+        return JsonResponse({'error': 'Ответ не найден.'}, status=404)
+
+    if answer.question.author_id != request.user.pk:
+        return JsonResponse({'error': 'Только автор вопроса может выбрать правильный ответ.'}, status=403)
+
+    with transaction.atomic():
+        new_state = not answer.is_correct
+        Answer.objects.filter(question=answer.question).update(is_correct=False)
+        if new_state:
+            answer.is_correct = True
+            answer.save(update_fields=['is_correct'])
+
+    return JsonResponse({'answer_id': answer.pk, 'is_correct': new_state})

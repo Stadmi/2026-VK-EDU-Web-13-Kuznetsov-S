@@ -1,14 +1,18 @@
+{% load question_extras %}
 {% if page_obj.has_other_pages %}
+{% paginator_range page_obj as page_range %}
 <nav aria-label="Page navigation" class="mt-5 mb-5">
-    <ul class="pagination">
+    <ul class="pagination flex-wrap">
         <li class="page-item{% if not page_obj.has_previous %} disabled{% endif %}">
             <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" aria-label="Previous">&laquo;</a>
         </li>
-        {% for num in page_obj.paginator.page_range %}
-            {% if num == page_obj.number %}
-                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% for p in page_range %}
+            {% if p is None %}
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% elif p == page_obj.number %}
+                <li class="page-item active"><span class="page-link">{{ p }}</span></li>
             {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
             {% endif %}
         {% endfor %}
         <li class="page-item{% if not page_obj.has_next %} disabled{% endif %}">
