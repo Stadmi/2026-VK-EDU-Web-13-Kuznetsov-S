@@ -20,7 +20,9 @@ services:
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             gunicorn -c gunicorn.conf.py application.wsgi"
     volumes:
       - .:/app
       - media_data:/app/media
@@ -36,6 +38,14 @@ services:
       CENTRIFUGO_API_URL: http://centrifugo:8001/api/publish
       CENTRIFUGO_WS_URL: ws://localhost:8001/connection/websocket
       EMAIL_HOST: maildev
+
+  wsgi:
+    build: .
+    command: gunicorn --bind 0.0.0.0:8081 --workers 2 wsgi_app:application
+    volumes:
+      - .:/app
+    ports:
+      - "8081:8081"
 
   celery:
     build: .
@@ -72,6 +82,17 @@ services:
     command: centrifugo -c /centrifugo/config.json
     ports:
       - "8001:8001"
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./staticfiles:/app/staticfiles:ro
+      - media_data:/app/media:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - web
 
   maildev:
     image: maildev/maildev
