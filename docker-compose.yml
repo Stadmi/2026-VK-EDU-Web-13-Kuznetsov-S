@@ -1,30 +1,84 @@
 version: '3.9'
 
 services:
+
   db:
-    image: postgres:16
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: askme
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
 
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
-      - media:/app/media
+      - media_data:/app/media
     ports:
       - "8000:8000"
-    env_file:
-      - .env.docker
     depends_on:
       - db
+      - redis
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      REDIS_HOST: redis
+      CENTRIFUGO_API_URL: http://centrifugo:8001/api/publish
+      CENTRIFUGO_WS_URL: ws://localhost:8001/connection/websocket
+      EMAIL_HOST: maildev
+
+  celery:
+    build: .
+    command: celery -A application worker -l info -c 2
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      REDIS_HOST: redis
+      CENTRIFUGO_API_URL: http://centrifugo:8001/api/publish
+      EMAIL_HOST: maildev
+
+  celerybeat:
+    build: .
+    command: celery -A application beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      REDIS_HOST: redis
+
+  centrifugo:
+    image: centrifugo/centrifugo:v5
+    volumes:
+      - ./centrifugo:/centrifugo
+    command: centrifugo -c /centrifugo/config.json
+    ports:
+      - "8001:8001"
+
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
 
 volumes:
   postgres_data:
-  media:
+  media_data:

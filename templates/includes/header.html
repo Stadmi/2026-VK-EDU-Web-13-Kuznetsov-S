@@ -5,9 +5,18 @@
             <a href="{% url 'questions:index' %}" class="text-dark text-decoration-none fw-bold fs-4">AskPupkin</a>
 
             <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center mx-4" style="max-width: 600px;">
-                <form class="w-100" action="" method="get">
-                    <input type="search" class="form-control rounded-pill" placeholder="Search questions..." aria-label="Search" name="query">
-                </form>
+                <div class="w-100 position-relative" id="search-wrapper">
+                    <input type="search"
+                           id="search-input"
+                           class="form-control rounded-pill"
+                           placeholder="Поиск вопросов..."
+                           aria-label="Search"
+                           autocomplete="off">
+                    <ul id="search-dropdown"
+                        class="list-unstyled position-absolute bg-white border rounded shadow-sm w-100 mb-0 d-none"
+                        style="top: calc(100% + 4px); z-index: 1050; max-height: 320px; overflow-y: auto;">
+                    </ul>
+                </div>
 
                 {% if user.is_authenticated %}
                     <a href="{% url 'questions:ask' %}" class="btn btn-success fw-bold px-4 rounded-pill shadow-sm">ASK</a>
@@ -42,7 +51,7 @@
                 {% else %}
                     <div class="user-info d-flex flex-column align-items-end">
                         <span class="fw-bold small mb-2" style="color: #343a40;">Гость</span>
-                        <div class="user-btn-group d-flex gap-1">
+                        <div class="user-btn-group d-flex align-items-center gap-1">
                             <a href="{% url 'core:login' %}" class="btn-profile-tag">log in</a>
                             <a href="{% url 'core:signup' %}" class="btn-profile-tag">sign up</a>
                         </div>

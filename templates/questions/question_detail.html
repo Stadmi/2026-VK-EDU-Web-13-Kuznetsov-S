@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 {% load question_extras %}
 {% block title %}{{ question.title }} — AskPupkin{% endblock %}
+
 {% block content %}
 
 <article class="question-card p-4 mb-4 border rounded shadow-sm">
     <div class="d-flex gap-4 align-items-start">
-
         <div class="vote-widget d-flex flex-column align-items-center"
-             data-type="question"
-             data-id="{{ question.id }}"
+             data-type="question" data-id="{{ question.id }}"
              data-user-vote="{{ user_question_vote }}">
             <button class="vote-btn up {% if user_question_vote == 1 %}active{% endif %}"
                     {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
@@ -26,12 +25,10 @@
         <div class="flex-grow-1">
             <h2 class="fw-bold mb-3">{{ question.title }}</h2>
             <p class="text-dark mb-3">{{ question.text }}</p>
-
             <div class="d-flex flex-wrap gap-3 small mb-3">
                 <span class="text-muted">Автор: <strong>{{ question.author.username }}</strong></span>
-                <span class="text-muted">Ответов: <strong>{{ question.answers_count }}</strong></span>
+                <span class="text-muted">Ответов: <strong id="answers-count">{{ question.answers_count }}</strong></span>
             </div>
-
             <div>
                 {% for tag in question.tags.all %}
                     <a href="{% url 'questions:tag' tag.name %}" class="tag-item">{{ tag.name }}</a>
@@ -44,66 +41,61 @@
 <section id="answers">
     <h3 class="fw-bold mb-4">Ответы</h3>
 
-    {% if page_obj.object_list %}
-        {% for answer in page_obj %}
-            <article id="answer-{{ answer.id }}"
-                     class="answer-card p-3 mb-3 border rounded shadow-sm {% if answer.is_correct %}correct border-success{% endif %}">
-                <div class="d-flex gap-3 align-items-start">
-
-                    <div class="vote-widget d-flex flex-column align-items-center"
-                         data-type="answer"
-                         data-id="{{ answer.id }}"
-                         data-user-vote="{{ user_answer_votes|get_item:answer.id }}">
-                        <button class="vote-btn up {% if user_answer_votes|get_item:answer.id == 1 %}active{% endif %}"
-                                {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
-                                aria-label="Лайк">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
-                        </button>
-                        <span class="vote-count fw-bold">{{ answer.rating }}</span>
-                        <button class="vote-btn down {% if user_answer_votes|get_item:answer.id == -1 %}active{% endif %}"
-                                {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
-                                aria-label="Дизлайк">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong>{{ answer.author.username }}</strong>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="correct-badge badge bg-success {% if not answer.is_correct %}d-none{% endif %}">✓ Правильный ответ</span>
-                                {% if user == question.author %}
-                                    <button class="btn btn-sm mark-correct-btn {% if answer.is_correct %}btn-success{% else %}btn-outline-success{% endif %}"
-                                            data-answer-id="{{ answer.id }}">
-                                        {% if answer.is_correct %}✓ Правильный{% else %}Отметить верным{% endif %}
-                                    </button>
-                                {% endif %}
-                            </div>
+    <div id="answers-list">
+        {% if page_obj.object_list %}
+            {% for answer in page_obj %}
+                <article id="answer-{{ answer.id }}"
+                         class="answer-card p-3 mb-3 border rounded shadow-sm {% if answer.is_correct %}correct border-success{% endif %}">
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="vote-widget d-flex flex-column align-items-center"
+                             data-type="answer" data-id="{{ answer.id }}"
+                             data-user-vote="{{ user_answer_votes|get_item:answer.id }}">
+                            <button class="vote-btn up {% if user_answer_votes|get_item:answer.id == 1 %}active{% endif %}"
+                                    {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
+                                    aria-label="Лайк">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                            </button>
+                            <span class="vote-count fw-bold">{{ answer.rating }}</span>
+                            <button class="vote-btn down {% if user_answer_votes|get_item:answer.id == -1 %}active{% endif %}"
+                                    {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% endif %}
+                                    aria-label="Дизлайк">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                            </button>
                         </div>
-                        <p class="mb-0">{{ answer.text }}</p>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong>{{ answer.author.username }}</strong>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="correct-badge badge bg-success {% if not answer.is_correct %}d-none{% endif %}">✓ Правильный ответ</span>
+                                    {% if user == question.author %}
+                                        <button class="btn btn-sm mark-correct-btn {% if answer.is_correct %}btn-success{% else %}btn-outline-success{% endif %}"
+                                                data-answer-id="{{ answer.id }}">
+                                            {% if answer.is_correct %}✓ Правильный{% else %}Отметить верным{% endif %}
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p class="mb-0">{{ answer.text }}</p>
+                        </div>
                     </div>
-                </div>
-            </article>
-        {% endfor %}
-        {% include 'includes/pagination.html' %}
-    {% else %}
-        <p class="text-muted">Пока нет ни одного ответа к этому вопросу.</p>
-    {% endif %}
+                </article>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted" id="no-answers-msg">Пока нет ни одного ответа к этому вопросу.</p>
+        {% endif %}
+    </div>
+
+    {% include 'includes/pagination.html' %}
 </section>
 
 <section class="mt-5">
     <h3 class="fw-bold mb-3">Добавить ответ</h3>
-
     {% if user.is_authenticated %}
         <form class="p-4 border rounded bg-white shadow-sm" method="post" novalidate>
             {% csrf_token %}
-
             {% if answer_form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ answer_form.non_field_errors }}
-                </div>
+                <div class="alert alert-danger">{{ answer_form.non_field_errors }}</div>
             {% endif %}
-
             <div class="mb-3">
                 <label class="form-label" for="{{ answer_form.text.id_for_label }}">{{ answer_form.text.label }}</label>
                 {{ answer_form.text }}
@@ -111,17 +103,102 @@
                     <div class="invalid-feedback d-block">{{ error }}</div>
                 {% endfor %}
             </div>
-
             <button type="submit" class="btn btn-primary">Отправить ответ</button>
         </form>
     {% else %}
         <div class="p-4 border rounded bg-light">
             <p class="mb-3 text-muted">Войдите, чтобы добавить ответ.</p>
-            <textarea class="form-control mb-3" rows="5" disabled title="Войдите, чтобы добавить ответ"></textarea>
-            <button class="btn btn-primary" disabled title="Войдите, чтобы добавить ответ">Отправить ответ</button>
-            <a href="{% url 'core:login' %}?next={{ request.get_full_path }}" class="btn btn-link">Войти</a>
+            <textarea class="form-control mb-3" rows="5" disabled></textarea>
+            <a href="{% url 'core:login' %}?next={{ request.get_full_path }}" class="btn btn-primary">Войти</a>
         </div>
     {% endif %}
 </section>
+
+<script>
+(function () {
+    const WS_URL = '{{ centrifugo_ws_url }}';
+    const TOKEN   = '{{ centrifugo_token }}';
+    const Q_ID    = {{ question.id }};
+    const PAGE    = {{ page_obj.number }};
+
+    if (!WS_URL) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/centrifuge@5.2.2/dist/centrifuge.js';
+    script.onload = function () {
+        const opts = TOKEN ? { token: TOKEN } : {};
+        const centrifuge = new Centrifuge(WS_URL, opts);
+
+        const sub = centrifuge.newSubscription('question:' + Q_ID);
+
+        sub.on('publication', function (ctx) {
+            const data = ctx.data;
+            if (data.type !== 'new_answer') return;
+
+            if (PAGE === 1) {
+                addAnswerCard(data);
+            } else {
+                showNewAnswerToast(data.author);
+            }
+        });
+
+        sub.subscribe();
+        centrifuge.connect();
+    };
+    document.head.appendChild(script);
+
+    function escHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function addAnswerCard(data) {
+        const noMsg = document.getElementById('no-answers-msg');
+        if (noMsg) noMsg.remove();
+
+        const list = document.getElementById('answers-list');
+        const card = document.createElement('article');
+        card.id = 'answer-' + data.answer_id;
+        card.className = 'answer-card p-3 mb-3 border rounded shadow-sm';
+        card.innerHTML = `
+            <div class="d-flex gap-3 align-items-start">
+                <div class="vote-widget d-flex flex-column align-items-center"
+                     data-type="answer" data-id="${data.answer_id}" data-user-vote="0">
+                    <button class="vote-btn up" aria-label="Лайк">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                    </button>
+                    <span class="vote-count fw-bold">${data.rating}</span>
+                    <button class="vote-btn down" aria-label="Дизлайк">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                    </button>
+                </div>
+                <div class="flex-grow-1">
+                    <strong>${escHtml(data.author)}</strong>
+                    <p class="mb-0 mt-2">${escHtml(data.text)}</p>
+                </div>
+            </div>`;
+        list.prepend(card);
+
+        const countEl = document.getElementById('answers-count');
+        if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + 1;
+
+        // подключить новый vote-widget к существующим обработчикам
+        if (window.__initVoteWidget) window.__initVoteWidget(card.querySelector('.vote-widget'));
+    }
+
+    function showNewAnswerToast(author) {
+        let toast = document.getElementById('new-answer-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'new-answer-toast';
+            toast.className = 'alert alert-info alert-dismissible position-fixed bottom-0 end-0 m-3';
+            toast.style.zIndex = '2000';
+            toast.innerHTML = '<button type="button" class="btn-close" onclick="this.parentElement.remove()"></button><span></span>';
+            document.body.appendChild(toast);
+        }
+        toast.querySelector('span').textContent = escHtml(author) + ' добавил новый ответ на этой странице.';
+        toast.classList.remove('d-none');
+    }
+})();
+</script>
 
 {% endblock %}

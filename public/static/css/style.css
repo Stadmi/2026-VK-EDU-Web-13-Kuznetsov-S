@@ -269,8 +269,19 @@ header .d-flex.flex-grow-1 {
     color: #dc3545 !important;
 }
 
-.form-control.is-invalid, 
+.form-control.is-invalid,
 textarea.form-control.is-invalid {
     border-color: #dc3545 !important;
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+#search-dropdown {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.search-item:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd !important;
 }

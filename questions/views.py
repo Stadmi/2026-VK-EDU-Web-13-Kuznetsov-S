@@ -1,6 +1,10 @@
 import json
+import time
 
+import jwt
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -8,9 +12,18 @@ from django.urls import reverse
 
 from .forms import AnswerForm, MarkCorrectForm, QuestionForm, VoteForm
 from .models import Answer, AnswerLike, Question, QuestionLike
+from .tasks import notify_new_answer, publish_new_answer
 from .utils import paginate
 
 ANSWERS_PER_PAGE = 10
+
+
+def _centrifugo_token(user_id):
+    return jwt.encode(
+        {'sub': str(user_id), 'exp': int(time.time()) + 3600},
+        settings.CENTRIFUGO_TOKEN_SECRET,
+        algorithm='HS256',
+    )
 
 
 def index(request):
@@ -59,6 +72,11 @@ def question_detail(request, question_id):
         answer_form = AnswerForm(request.POST)
         if answer_form.is_valid():
             answer = answer_form.save(user=request.user, question=question)
+            try:
+                notify_new_answer.delay(answer.pk)
+                publish_new_answer.delay(answer.pk)
+            except Exception:
+                pass
             page = _answer_page_for(question, answer.pk)
             return redirect(f"{question.get_absolute_url()}?page={page}#answer-{answer.pk}")
 
@@ -74,6 +92,10 @@ def question_detail(request, question_id):
         alikes = AnswerLike.objects.filter(answer_id__in=answer_ids, user=request.user)
         user_answer_votes = {al.answer_id: al.value for al in alikes}
 
+    centrifugo_token = ''
+    if request.user.is_authenticated:
+        centrifugo_token = _centrifugo_token(request.user.pk)
+
     return render(
         request,
         'questions/question_detail.html',
@@ -83,6 +105,8 @@ def question_detail(request, question_id):
             'answer_form': answer_form,
             'user_question_vote': user_question_vote,
             'user_answer_votes': user_answer_votes,
+            'centrifugo_token': centrifugo_token,
+            'centrifugo_ws_url': settings.CENTRIFUGO_WS_URL,
         },
     )
 
@@ -98,6 +122,30 @@ def ask(request):
         form = QuestionForm()
 
     return render(request, 'questions/ask.html', {'form': form})
+
+
+def search(request):
+    q = request.GET.get('q', '').strip()
+    if len(q) < 2:
+        return JsonResponse({'results': []})
+
+    search_query = SearchQuery(q, config='russian')
+    search_vector = (
+        SearchVector('title', weight='A', config='russian') +
+        SearchVector('text', weight='B', config='russian')
+    )
+    questions = (
+        Question.objects
+        .annotate(rank=SearchRank(search_vector, search_query))
+        .filter(rank__gt=0.01)
+        .order_by('-rank')
+        .values('id', 'title')[:10]
+    )
+    results = [
+        {'id': row['id'], 'title': row['title'], 'url': f'/question/{row["id"]}/'}
+        for row in questions
+    ]
+    return JsonResponse({'results': results})
 
 
 def _parse_json_body(request):
