@@ -214,7 +214,7 @@ public/static/**/*.map
 temp-*
 
 media/
-static/
+staticfiles/
 .env
 
 # SQLite
