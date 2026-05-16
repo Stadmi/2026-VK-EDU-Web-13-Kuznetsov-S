@@ -3,21 +3,61 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-between">
             <a href="{% url 'questions:index' %}" class="text-dark text-decoration-none fw-bold fs-4">AskPupkin</a>
+
             <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center mx-4" style="max-width: 600px;">
-                <form class="w-100" action="" method="get">
-                    <input type="search" class="form-control rounded-pill" placeholder="Search questions..." aria-label="Search" name="query">
-                </form>
-                <a href="{% url 'questions:ask' %}" class="btn btn-success fw-bold px-4 rounded-pill shadow-sm">ASK</a>
-            </div>
-            <div class="user-profile d-flex align-items-center gap-3">
-                <div class="user-info d-flex flex-column align-items-end">
-                    <span class="fw-bold small mb-2" style="color: #343a40;">Megan Fox</span>
-                    <div class="user-btn-group d-flex gap-1">
-                        <a href="{% url 'core:profile' %}" class="btn-profile-tag">profile</a>
-                        <a href="{% url 'core:login' %}" class="btn-profile-tag logout">log in</a>
-                    </div>
+                <div class="w-100 position-relative" id="search-wrapper">
+                    <input type="search"
+                           id="search-input"
+                           class="form-control rounded-pill"
+                           placeholder="Поиск вопросов..."
+                           aria-label="Search"
+                           autocomplete="off">
+                    <ul id="search-dropdown"
+                        class="list-unstyled position-absolute bg-white border rounded shadow-sm w-100 mb-0 d-none"
+                        style="top: calc(100% + 4px); z-index: 1050; max-height: 320px; overflow-y: auto;">
+                    </ul>
                 </div>
-                <img src="{% static 'img/megan.jpg' %}" alt="Profile" width="60" height="60" class="rounded border shadow-sm">
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'questions:ask' %}" class="btn btn-success fw-bold px-4 rounded-pill shadow-sm">ASK</a>
+                {% else %}
+                    <span class="btn btn-success fw-bold px-4 rounded-pill shadow-sm disabled"
+                          title="Войдите, чтобы задать вопрос"
+                          aria-disabled="true">ASK</span>
+                {% endif %}
+            </div>
+
+            <div class="user-profile d-flex align-items-center gap-3">
+                {% if user.is_authenticated %}
+                    <div class="user-info d-flex flex-column align-items-end">
+                        <span class="fw-bold small mb-2" style="color: #343a40;">
+                            {{ user.get_full_name|default:user.username }}
+                        </span>
+                        <div class="user-btn-group d-flex align-items-center gap-1">
+                            <a href="{% url 'core:profile' %}" class="btn-profile-tag">profile</a>
+                            <form action="{% url 'core:logout' %}" method="post" class="m-0 p-0 d-flex">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="btn-profile-tag logout">log out</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Profile" width="60" height="60" class="rounded border shadow-sm" style="object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'img/megan.jpg' %}" alt="Profile" width="60" height="60" class="rounded border shadow-sm" style="object-fit: cover;">
+                    {% endif %}
+                {% else %}
+                    <div class="user-info d-flex flex-column align-items-end">
+                        <span class="fw-bold small mb-2" style="color: #343a40;">Гость</span>
+                        <div class="user-btn-group d-flex align-items-center gap-1">
+                            <a href="{% url 'core:login' %}" class="btn-profile-tag">log in</a>
+                            <a href="{% url 'core:signup' %}" class="btn-profile-tag">sign up</a>
+                        </div>
+                    </div>
+                    <img src="{% static 'img/megan.jpg' %}" alt="Profile" width="60" height="60" class="rounded border shadow-sm" style="object-fit: cover;">
+                {% endif %}
             </div>
         </div>
     </div>

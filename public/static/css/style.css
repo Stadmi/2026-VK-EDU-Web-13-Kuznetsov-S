@@ -53,27 +53,36 @@ header .d-flex.flex-grow-1 {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 8px;
-    padding: 4px 8px;
-    min-width: 40px;
+    padding: 6px 10px;
+    min-width: 52px;
+    flex-shrink: 0;
 }
 
 .vote-btn {
     background: none;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     line-height: 1;
     color: #adb5bd;
     cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 0;
+    transition: color 0.2s ease, transform 0.15s ease;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.vote-btn.up:hover {
-    color: #28a745; 
+.vote-btn:disabled {
+    cursor: default;
+    opacity: 0.4;
+}
+
+.vote-btn.up:not(:disabled):hover {
+    color: #28a745;
     transform: translateY(-2px);
 }
 
-.vote-btn.down:hover {
+.vote-btn.down:not(:disabled):hover {
     color: #dc3545;
     transform: translateY(2px);
 }
@@ -91,16 +100,20 @@ header .d-flex.flex-grow-1 {
 }
 
 .btn-profile-tag {
+    display: inline-flex;
+    align-items: center;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     text-decoration: none;
-    padding: 2px 8px;
+    padding: 4px 10px;
     border-radius: 6px;
     border: 1px solid #dee2e6;
     background-color: #fff;
     color: #6c757d;
     transition: all 0.2s ease;
+    line-height: 1.4;
+    cursor: pointer;
 }
 
 .btn-profile-tag:hover {
@@ -256,8 +269,19 @@ header .d-flex.flex-grow-1 {
     color: #dc3545 !important;
 }
 
-.form-control.is-invalid, 
+.form-control.is-invalid,
 textarea.form-control.is-invalid {
     border-color: #dc3545 !important;
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+#search-dropdown {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.search-item:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd !important;
 }

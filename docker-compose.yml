@@ -1,18 +1,106 @@
 version: '3.9'
 
 services:
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: askme
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - '8000:8000'
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn -c gunicorn.conf.py application.wsgi"
     volumes:
       - .:/app
-      - media:/app/media
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
     environment:
-      - DJANGO_DEBUG=True
-      - DJANGO_ALLOWED_HOSTS=0.0.0.0,localhost
-    depends_on: []
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      REDIS_HOST: redis
+      CENTRIFUGO_API_URL: http://centrifugo:8001/api/publish
+      CENTRIFUGO_WS_URL: ws://localhost:8001/connection/websocket
+      EMAIL_HOST: maildev
+
+  wsgi:
+    build: .
+    command: gunicorn --bind 0.0.0.0:8081 --workers 2 wsgi_app:application
+    volumes:
+      - .:/app
+    ports:
+      - "8081:8081"
+
+  celery:
+    build: .
+    command: celery -A application worker -l info -c 2
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      REDIS_HOST: redis
+      CENTRIFUGO_API_URL: http://centrifugo:8001/api/publish
+      EMAIL_HOST: maildev
+
+  celerybeat:
+    build: .
+    command: celery -A application beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      REDIS_HOST: redis
+
+  centrifugo:
+    image: centrifugo/centrifugo:v5
+    volumes:
+      - ./centrifugo:/centrifugo
+    command: centrifugo -c /centrifugo/config.json
+    ports:
+      - "8001:8001"
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./staticfiles:/app/staticfiles:ro
+      - media_data:/app/media:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
 
 volumes:
-  media:
+  postgres_data:
+  media_data:

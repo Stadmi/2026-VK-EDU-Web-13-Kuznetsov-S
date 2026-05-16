@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Questions tagged {{ tag_name }} — AskPupkin{% endblock %}
+{% block title %}Тег: {{ tag_name }} — AskPupkin{% endblock %}
 {% block content %}
-<div class="d-flex align-items-baseline gap-3 mb-4">
-    <h2 class="fw-bold">Questions tagged «{{ tag_name }}»</h2>
-    <a href="{% url 'questions:index' %}" class="hot-link fw-bold text-decoration-none pb-1">New Questions</a>
+<div class="mb-4">
+    <h2 class="fw-bold">Вопросы по тегу: <span class="tag-item">{{ tag_name }}</span></h2>
 </div>
-{% include 'includes/question_list.html' %}
-{% include 'includes/pagination.html' %}
+{% if page_obj.object_list %}
+    {% include 'includes/question_list.html' %}
+    {% include 'includes/pagination.html' %}
+{% else %}
+    <p class="text-muted text-center mt-5">Пока нет вопросов с тегом «{{ tag_name }}».</p>
+{% endif %}
 {% endblock %}
