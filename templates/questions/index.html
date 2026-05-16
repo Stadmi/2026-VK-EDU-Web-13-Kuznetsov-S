@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}New Questions — AskPupkin{% endblock %}
+{% block title %}Новые вопросы — AskPupkin{% endblock %}
 {% block content %}
 <div class="d-flex align-items-baseline gap-3 mb-4">
-    <h2 class="fw-bold">New Questions</h2>
-    <a href="{% url 'questions:hot' %}" class="hot-link fw-bold text-decoration-none pb-1">Hot Questions</a>
+    <h2 class="fw-bold">Новые вопросы</h2>
+    <a href="{% url 'questions:hot' %}" class="hot-link fw-bold text-decoration-none pb-1">Лучшие</a>
 </div>
-{% include 'includes/question_list.html' %}
-{% include 'includes/pagination.html' %}
+{% if page_obj.object_list %}
+    {% include 'includes/question_list.html' %}
+    {% include 'includes/pagination.html' %}
+{% else %}
+    <p class="text-muted text-center mt-5">Пока нет ни одного вопроса.</p>
+{% endif %}
 {% endblock %}

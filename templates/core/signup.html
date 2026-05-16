@@ -5,19 +5,59 @@
     <h2 class="fw-bold">Sign up</h2>
     <p class="text-muted">Create a new AskPupkin account.</p>
 </div>
-<form class="p-4 border rounded bg-white shadow-sm" method="post">
+
+<form class="p-4 border rounded bg-white shadow-sm" method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
     <div class="mb-3">
-        <label class="form-label" for="username">Username</label>
-        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+        <label class="form-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
     </div>
+
     <div class="mb-3">
-        <label class="form-label" for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+        <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
     </div>
+
     <div class="mb-3">
-        <label class="form-label" for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        <label class="form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+        {{ form.first_name }}
+        {% for error in form.first_name.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
     </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+        {{ form.password1 }}
+        {% if form.password1.help_text %}
+            <div class="form-text">{{ form.password1.help_text|safe }}</div>
+        {% endif %}
+        {% for error in form.password1.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+        {{ form.password2 }}
+        {% for error in form.password2.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+
     <button type="submit" class="btn btn-success">Create account</button>
 </form>
 {% endblock %}

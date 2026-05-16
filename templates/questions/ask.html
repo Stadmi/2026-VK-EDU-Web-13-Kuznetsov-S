@@ -5,19 +5,43 @@
     <h2 class="fw-bold">Ask a New Question</h2>
     <p class="text-muted">Заполните форму, чтобы опубликовать вопрос.</p>
 </div>
-<form class="p-4 border rounded bg-white shadow-sm">
+
+<form class="p-4 border rounded bg-white shadow-sm" method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
     <div class="mb-3">
-        <label class="form-label" for="title">Title</label>
-        <input type="text" class="form-control" id="title" name="title" placeholder="Question title">
+        <label class="form-label" for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+        {{ form.title }}
+        {% for error in form.title.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
     </div>
+
     <div class="mb-3">
-        <label class="form-label" for="text">Text</label>
-        <textarea class="form-control" id="text" name="text" rows="6" placeholder="Describe your problem..."></textarea>
+        <label class="form-label" for="{{ form.text.id_for_label }}">{{ form.text.label }}</label>
+        {{ form.text }}
+        {% for error in form.text.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
     </div>
+
     <div class="mb-3">
-        <label class="form-label" for="tags">Tags</label>
-        <input type="text" class="form-control" id="tags" name="tags" placeholder="python, django, web">
+        <label class="form-label" for="{{ form.tags.id_for_label }}">{{ form.tags.label }}</label>
+        {{ form.tags }}
+        {% if form.tags.help_text %}
+            <div class="form-text">{{ form.tags.help_text }}</div>
+        {% endif %}
+        {% for error in form.tags.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
     </div>
+
     <button type="submit" class="btn btn-success px-4">Post question</button>
 </form>
 {% endblock %}

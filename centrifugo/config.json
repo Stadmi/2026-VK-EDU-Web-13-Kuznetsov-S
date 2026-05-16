@@ -1,0 +1,16 @@
+{
+  "token_hmac_secret_key": "askpupkin-token-secret",
+  "api_key": "askpupkin-api-key",
+  "admin": true,
+  "admin_password": "admin",
+  "admin_secret": "askpupkin-admin-secret",
+  "port": 8001,
+  "allowed_origins": ["http://localhost:8000"],
+  "namespaces": [
+    {
+      "name": "question",
+      "allow_subscribe_for_anonymous": true,
+      "presence": false
+    }
+  ]
+}
