@@ -24,12 +24,12 @@
                         <span class="fw-bold small mb-2" style="color: #343a40;">
                             {{ user.get_full_name|default:user.username }}
                         </span>
-                        <div class="user-btn-group d-flex gap-1">
+                        <div class="user-btn-group d-flex align-items-center gap-1">
                             <a href="{% url 'core:profile' %}" class="btn-profile-tag">profile</a>
-                            <form action="{% url 'core:logout' %}" method="post" class="m-0 p-0 d-inline">
+                            <form action="{% url 'core:logout' %}" method="post" class="m-0 p-0 d-flex">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button type="submit" class="btn-profile-tag logout border-0 bg-transparent p-0">log out</button>
+                                <button type="submit" class="btn-profile-tag logout">log out</button>
                             </form>
                         </div>
                     </div>

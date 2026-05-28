@@ -1,5 +1,13 @@
+import os
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
+
+
+def avatar_upload_path(instance, filename):
+    ext = os.path.splitext(filename)[1].lower()
+    return f'avatars/{uuid.uuid4().hex}{ext}'
 
 
 class Profile(models.Model):
@@ -10,7 +18,7 @@ class Profile(models.Model):
         verbose_name='Пользователь'
     )
     avatar = models.ImageField(
-        upload_to='avatars/',
+        upload_to=avatar_upload_path,
         null=True,
         blank=True,
         verbose_name='Аватар'
